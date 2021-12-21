@@ -10,6 +10,7 @@ import org.jooq.Field;
 import org.jooq.Record;
 import org.jooq.Table;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.RepeatedTest;
 
 public class ExampleTest extends PostgresContainerBase {
 
@@ -27,6 +28,14 @@ public class ExampleTest extends PostgresContainerBase {
     var result = dslContext().select(ID).from(FOO).fetchStream().findAny();
 
     assertThat(result).isNotEmpty();
+  }
+
+  @RepeatedTest(5)
+  public void givenCorrectStreamAndFindAny_ThenWorksFine() {
+    // CORRECT USE
+    try (var stream = dslContext().select(ID).from(FOO).fetchStream()) {
+      assertThat(stream.findAny()).isNotEmpty();
+    }
   }
 
   //  @RepeatedTest(5)
